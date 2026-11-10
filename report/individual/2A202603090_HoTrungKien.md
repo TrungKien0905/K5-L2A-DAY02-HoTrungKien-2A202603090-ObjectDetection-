@@ -81,8 +81,14 @@ Trả lời bốn câu hỏi cuối notebook:
 ## 6. Khó khăn và cách xử lý
 
 | Bước/thời điểm | Lỗi quan sát | Cách đã thử | Kết quả/còn thiếu |
-|---|---|---|---|
-| | | | |
+| --- | --- | --- | --- |
+| Gán nhãn trên CVAT | Xe `truck` dễ nhầm với `van` do ảnh mờ và góc chụp từ trên cao. | Quan sát cabin, thùng xe và đối chiếu guideline. | Xác nhận nhãn `truck` cho `drive_005`. |
+| Phân loại phương tiện | Xe `van` dễ nhầm với `car` do thân xe nhỏ và hình dáng tương tự. | Kiểm tra thân xe dạng hộp, chiều cao và khoang phía sau. | Xác nhận nhãn `van` cho các trường hợp mơ hồ. |
+| Kiểm tra chất lượng nhãn | Một số xe nhỏ, bị che khuất hoặc khó quan sát, có nguy cơ bỏ sót hoặc vẽ box chưa sát. | Rà soát ảnh bằng mắt, kiểm tra class và bounding box theo guideline. | Cần xác nhận số lỗi thực tế đã phát hiện và chỉnh sửa. |
+| Huấn luyện YOLO26 | Dữ liệu train chỉ có 50 ảnh, khiến khả năng học đặc trưng phương tiện còn hạn chế. | Sử dụng `yolo26n.pt`, huấn luyện 50 epochs với kích thước ảnh 640. | Hoàn thành huấn luyện, lưu checkpoint `best.pt`. |
+| Đánh giá mô hình | Recall thấp (23.40%), mô hình còn bỏ sót nhiều phương tiện. | Đánh giá trên 10 ảnh eval và kiểm tra kết quả dự đoán. | Precision đạt 40.71%, mAP50 đạt 27.37%; cần cải thiện khả năng phát hiện. |
+| Kiểm tra bounding box | mAP50–95 chỉ đạt 20.18%, cho thấy độ chính xác định vị còn hạn chế. | So sánh box dự đoán với nhãn thực tế trên ảnh eval. | Cần tiếp tục kiểm tra box lệch, quá rộng hoặc quá hẹp. |
+| Phân tích theo class | Mô hình nhận diện `bus` và `van` kém, có nguy cơ bỏ sót hoặc nhầm lớp. | Kiểm tra recall từng lớp và kết quả dự đoán. | Recall `bus` đạt 0%, `van` đạt 8.33%; cần thêm dữ liệu và rà soát nhãn. |
 
 
 ## 7. Tự đánh giá theo rubric
